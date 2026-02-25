@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenith — Sign In</title>
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== Base ===== */
+        :root {
+            --accent: #4f46e5;
+            --accent-hover: #4338ca;
+            --accent-light: rgba(79,70,229,0.08);
+            --accent-glow: rgba(79,70,229,0.18);
+        }
+        * { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
+        body { overflow-x: hidden; }
+
+        /* ===== Brand Panel (Left) ===== */
+        .brand-panel {
+            background:
+                radial-gradient(ellipse at 30% 0%, rgba(99,102,241,0.25), transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(124,58,237,0.2), transparent 50%),
+                linear-gradient(160deg, #0c0a1d 0%, #141136 35%, #1e1b4b 65%, #252365 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative Shapes */
+        .brand-panel .shape {
+            position: absolute;
+            border-radius: 50%;
+        }
+        .shape-ring {
+            border: 1px solid rgba(255,255,255,0.04);
+            background: transparent;
+        }
+        .shape-glow {
+            background: rgba(255,255,255,0.03);
+            filter: blur(1px);
+        }
+        .shape-1 { width: 500px; height: 500px; top: -160px; right: -160px; }
+        .shape-2 { width: 380px; height: 380px; bottom: -120px; left: -100px; }
+        .shape-3 { width: 220px; height: 220px; top: 30%; left: 60%; }
+        .shape-4 { width: 700px; height: 700px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+        .shape-5 { width: 500px; height: 500px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+        .shape-6 { width: 300px; height: 300px; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+
+        /* Grid pattern */
+        .grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+        }
+
+        /* ===== Form Panel (Right) ===== */
+        .form-panel {
+            background: #fafbfc;
+            position: relative;
+        }
+        .form-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.06), transparent);
+        }
+
+        /* ===== Floating Label Inputs ===== */
+        .input-wrapper { position: relative; }
+
+        .input-custom {
+            width: 100%;
+            background: #fff;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px 16px 9px 48px;
+            font-size: 0.875rem;
+            color: #111827;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            outline: none;
+        }
+        .input-custom:hover {
+            border-color: #d1d5db;
+        }
+        .input-custom:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-light), 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .input-custom::placeholder { color: transparent; }
+
+        .input-icon-left {
+            position: absolute;
+            left: 16px; top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 1.05rem;
+            z-index: 2;
+            transition: color 0.3s ease;
+            pointer-events: none;
+        }
+        .input-wrapper:focus-within .input-icon-left { color: var(--accent); }
+
+        .float-lbl {
+            position: absolute;
+            left: 48px; top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 0.875rem;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .input-custom:focus ~ .float-lbl,
+        .input-custom:not(:placeholder-shown) ~ .float-lbl {
+            top: 14px;
+            transform: translateY(0);
+            font-size: 0.6rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* ===== Password Toggle ===== */
+        .pass-toggle {
+            position: absolute;
+            right: 14px; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            z-index: 2;
+            padding: 4px;
+            transition: color 0.3s ease;
+            font-size: 1.1rem;
+        }
+        .pass-toggle:hover { color: var(--accent); }
+
+        /* ===== Checkbox ===== */
+        .check-wrapper { display: flex; align-items: center; gap: 9px; cursor: pointer; }
+        .check-wrapper input[type="checkbox"] {
+            -webkit-appearance: none; appearance: none;
+            width: 17px; height: 17px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 5px;
+            background: #fff;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.25s ease;
+            flex-shrink: 0;
+        }
+        .check-wrapper input:hover { border-color: var(--accent); }
+        .check-wrapper input:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        .check-wrapper input:checked::after {
+            content: '';
+            position: absolute;
+            left: 5px; top: 1px;
+            width: 5px; height: 9px;
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .check-wrapper input:focus-visible {
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        /* ===== Primary Button ===== */
+        .btn-main {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            border: none;
+            border-radius: 14px;
+            padding: 15px 24px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: #fff;
+            letter-spacing: 0.01em;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(79,70,229,0.3);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .btn-main::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0), rgba(255,255,255,0.12), rgba(255,255,255,0));
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        .btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 36px rgba(79,70,229,0.45);
+        }
+        .btn-main:hover::before { transform: translateX(100%); }
+        .btn-main:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 4px 12px rgba(79,70,229,0.25);
+        }
+
+        /* ===== Social Buttons ===== */
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #fff;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 13px 16px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #374151;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn-social:hover {
+            border-color: #d1d5db;
+            background: #f9fafb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+            color: #374151;
+        }
+        .btn-social:active { transform: translateY(0); }
+
+        /* ===== Divider ===== */
+        .or-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #b0b5bf;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        /* ===== Feature Items ===== */
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 0;
+        }
+        .feature-icon-box {
+            width: 42px; height: 42px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* ===== Link Accent ===== */
+        .link-accent {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .link-accent::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0;
+            width: 0; height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .link-accent:hover { color: var(--accent-hover); }
+        .link-accent:hover::after { width: 100%; }
+
+        /* ===== Entrance Animations ===== */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(22px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .anim-in {
+            opacity: 0;
+            animation: slideUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .ad1 { animation-delay: 0.06s; }
+        .ad2 { animation-delay: 0.12s; }
+        .ad3 { animation-delay: 0.18s; }
+        .ad4 { animation-delay: 0.24s; }
+        .ad5 { animation-delay: 0.30s; }
+        .ad6 { animation-delay: 0.36s; }
+        .ad7 { animation-delay: 0.42s; }
+        .ad8 { animation-delay: 0.48s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        /* ===== Mobile Brand Bar ===== */
+        .mobile-brand {
+            background: linear-gradient(135deg, #0c0a1d, #1e1b4b, #312e81);
+            padding: 20px 24px;
+        }
+
+        /* ===== Testimonial Card ===== */
+        .testimonial-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+
+        /* ===== Responsive Fine-Tuning ===== */
+        @media (max-width: 991.98px) {
+            .form-panel::before { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid p-0">
+        <div class="row g-0 min-vh-100">
+
+            <!-- ===================================================================
+                 LEFT PANEL — Brand / Features / Testimonial  (visible lg+)
+                 =================================================================== -->
+            <div class="col-lg-5 col-xl-5 d-none d-lg-flex brand-panel align-items-center justify-content-center position-relative">
+
+                <!-- Decorative shapes -->
+                <div class="shape shape-ring shape-1" aria-hidden="true"></div>
+                <div class="shape shape-glow shape-2" aria-hidden="true"></div>
+                <div class="shape shape-glow shape-3" aria-hidden="true"></div>
+                <div class="shape shape-ring shape-4" aria-hidden="true"></div>
+                <div class="shape shape-ring shape-5" aria-hidden="true"></div>
+                <div class="shape shape-ring shape-6" aria-hidden="true"></div>
+                <div class="grid-overlay" aria-hidden="true"></div>
+
+                <!-- Brand content -->
+                <div class="position-relative text-white px-4 px-xl-5 fade-in" style="max-width: 440px; z-index: 2;">
+
+                    <!-- Logo -->
+                    <div class="d-flex align-items-center gap-3 mb-5">
+                        <div class="d-flex align-items-center justify-content-center rounded-3"
+                             style="width: 44px; height: 44px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08);">
+                            <i class="bi bi-hexagon-fill fs-5"></i>
+                        </div>
+                        <span class="fs-5 fw-bold letter-spacing-1">Zenith</span>
+                    </div>
+
+                    <!-- Headline -->
+                    <h1 class="fw-extrabold mb-3 lh-sm" style="font-size: 2.4rem; font-weight: 800;">
+                        Build something<br>
+                        <span style="background: linear-gradient(135deg, #c7d2fe, #a5b4fc, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                            extraordinary.
+                        </span>
+                    </h1>
+
+                    <p class="mb-4" style="color: rgba(255,255,255,0.5); line-height: 1.75; font-size: 0.9rem;">
+                        Join thousands of teams shipping better products, faster. Your next breakthrough starts here.
+                    </p>
+
+                    <!-- Feature list -->
+                    <div class="mb-4">
+                        <div class="feature-item">
+                            <div class="feature-icon-box">
+                                <i class="bi bi-lightning-charge-fill text-white" style="font-size: 1rem;"></i>
+                            </div>
+                            <div>
+                                <div class="fw-semibold" style="font-size: 0.85rem;">Lightning Fast</div>
+                                <div style="color: rgba(255,255,255,0.4); font-size: 0.78rem;">Built for speed and performance</div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon-box">
+                                <i class="bi bi-shield-lock-fill text-white" style="font-size: 1rem;"></i>
+                            </div>
+                            <div>
+                                <div class="fw-semibold" style="font-size: 0.85rem;">Enterprise Security</div>
+                                <div style="color: rgba(255,255,255,0.4); font-size: 0.78rem;">SOC2 compliant, end-to-end encrypted</div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon-box">
+                                <i class="bi bi-people-fill text-white" style="font-size: 1rem;"></i>
+                            </div>
+                            <div>
+                                <div class="fw-semibold" style="font-size: 0.85rem;">Team Collaboration</div>
+                                <div style="color: rgba(255,255,255,0.4); font-size: 0.78rem;">Real-time sync across all devices</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial -->
+                    <div class="testimonial-card">
+                        <div class="d-flex align-items-center gap-1 mb-2">
+                            <i class="bi bi-star-fill" style="color: #fbbf24; font-size: 0.7rem;"></i>
+                            <i class="bi bi-star-fill" style="color: #fbbf24; font-size: 0.7rem;"></i>
+                            <i class="bi bi-star-fill" style="color: #fbbf24; font-size: 0.7rem;"></i>
+                            <i class="bi bi-star-fill" style="color: #fbbf24; font-size: 0.7rem;"></i>
+                            <i class="bi bi-star-fill" style="color: #fbbf24; font-size: 0.7rem;"></i>
+                        </div>
+                        <p class="mb-3" style="color: rgba(255,255,255,0.65); font-size: 0.82rem; line-height: 1.65;">
+                            "Zenith transformed how our team works. We shipped 3x faster and our developers absolutely love it."
+                        </p>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                 style="width: 34px; height: 34px; background: linear-gradient(135deg, #818cf8, #6366f1); flex-shrink: 0;">
+                                <span class="text-white fw-bold" style="font-size: 0.7rem;">AK</span>
+                            </div>
+                            <div>
+                                <div class="fw-semibold" style="font-size: 0.8rem;">Alex Kim</div>
+                                <div style="color: rgba(255,255,255,0.35); font-size: 0.72rem;">CTO at TechFlow</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================================================================
+                 RIGHT PANEL — Login Form
+                 =================================================================== -->
+            <div class="col-lg-7 col-xl-7 d-flex flex-column form-panel">
+
+                <!-- Mobile brand header (visible only on small screens) -->
+                <div class="d-lg-none mobile-brand">
+                    <div class="d-flex align-items-center justify-content-center gap-2">
+                        <div class="d-flex align-items-center justify-content-center rounded-3"
+                             style="width: 34px; height: 34px; background: rgba(255,255,255,0.12);">
+                            <i class="bi bi-hexagon-fill text-white" style="font-size: 0.9rem;"></i>
+                        </div>
+                        <span class="text-white fw-bold" style="font-size: 1.1rem;">Zenith</span>
+                    </div>
+                </div>
+
+                <!-- Centered form container -->
+                <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1 px-3 px-sm-4 py-4 py-lg-5">
+                    <div style="width: 100%; max-width: 420px;">
+
+                        <!-- Heading -->
+                        <div class="mb-4 anim-in ad1">
+                            <h2 class="fw-bold text-dark mb-1" style="font-size: 1.65rem; letter-spacing: -0.02em;">Welcome back</h2>
+                            <p class="mb-0" style="color: #6b7280; font-size: 0.875rem;">Enter your credentials to access your account</p>
+                        </div>
+
+                        <!-- ── Login Form ── -->
+                        <form id="bsLoginForm" novalidate>
+
+                            <!-- Email -->
+                            <div class="input-wrapper mb-3 anim-in ad2">
+                                <i class="bi bi-envelope input-icon-left"></i>
+                                <input
+                                    type="email"
+                                    id="bsEmail"
+                                    placeholder=" "
+                                    required
+                                    autocomplete="email"
+                                    aria-label="Email address"
+                                    class="input-custom"
+                                >
+                                <label for="bsEmail" class="float-lbl">Email address</label>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="input-wrapper mb-3 anim-in ad3">
+                                <i class="bi bi-lock input-icon-left"></i>
+                                <input
+                                    type="password"
+                                    id="bsPassword"
+                                    placeholder=" "
+                                    required
+                                    autocomplete="current-password"
+                                    aria-label="Password"
+                                    class="input-custom"
+                                    style="padding-right: 48px;"
+                                >
+                                <label for="bsPassword" class="float-lbl">Password</label>
+                                <button type="button" class="pass-toggle" id="bsToggle" aria-label="Toggle password visibility">
+                                    <i class="bi bi-eye" id="bsEyeIcon"></i>
+                                </button>
+                            </div>
+
+                            <!-- Remember & Forgot -->
+                            <div class="d-flex align-items-center justify-content-between mb-4 anim-in ad4">
+                                <label class="check-wrapper">
+                                    <input type="checkbox" aria-label="Remember me">
+                                    <span style="font-size: 0.8rem; color: #6b7280;">Remember me</span>
+                                </label>
+                                <a href="#" class="link-accent" style="font-size: 0.8rem;">Forgot password?</a>
+                            </div>
+
+                            <!-- Sign In Button -->
+                            <div class="anim-in ad5">
+                                <button type="submit" class="btn-main" id="bsSubmitBtn">
+                                    <span id="bsBtnText">Sign in</span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Divider -->
+                        <div class="my-4 anim-in ad6">
+                            <div class="or-divider">or continue with</div>
+                        </div>
+
+                        <!-- Social Buttons -->
+                        <div class="row g-3 anim-in ad7">
+                            <div class="col-6">
+                                <button type="button" class="btn-social w-100">
+                                    <svg width="17" height="17" viewBox="0 0 24 24">
+                                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
+                                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                    </svg>
+                                    Google
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn-social w-100">
+                                    <svg width="17" height="17" fill="#24292f" viewBox="0 0 24 24">
+                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                    </svg>
+                                    GitHub
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Sign Up -->
+                        <p class="text-center mt-4 anim-in ad8" style="font-size: 0.82rem; color: #6b7280;">
+                            Don't have an account?
+                            <a href="#" class="link-accent ms-1">Create account</a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="text-center pb-3 px-4 anim-in" style="animation-delay: 0.5s;">
+                    <p class="mb-0" style="font-size: 0.72rem; color: #9ca3af;">
+                        © 2025 Zenith Inc. · <a href="#" style="color: #9ca3af; text-decoration: none;">Privacy</a> · <a href="#" style="color: #9ca3af; text-decoration: none;">Terms</a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        /* ── Password Toggle ── */
+        const bsToggle   = document.getElementById('bsToggle');
+        const bsPassIn   = document.getElementById('bsPassword');
+        const bsEyeIcon  = document.getElementById('bsEyeIcon');
+
+        bsToggle.addEventListener('click', () => {
+            const isPass = bsPassIn.type === 'password';
+            bsPassIn.type = isPass ? 'text' : 'password';
+            bsEyeIcon.className = isPass ? 'bi bi-eye-slash' : 'bi bi-eye';
+        });
+
+        /* ── Form Submit Handler (Demo) ── */
+        document.getElementById('bsLoginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn     = document.getElementById('bsSubmitBtn');
+            const btnText = document.getElementById('bsBtnText');
+            const orig    = btnText.textContent;
+
+            btn.disabled = true;
+            btn.style.opacity = '0.75';
+            btnText.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Signing in…';
+
+            setTimeout(() => {
+                btnText.innerHTML = '<i class="bi bi-check-lg me-1"></i>Success!';
+                btn.style.opacity = '1';
+                btn.style.background = 'linear-gradient(135deg, #059669, #10b981)';
+                btn.style.boxShadow = '0 4px 20px rgba(16,185,129,0.35)';
+
+                setTimeout(() => {
+                    btnText.textContent = orig;
+                    btn.disabled = false;
+                    btn.style.background = '';
+                    btn.style.boxShadow = '';
+                }, 1500);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Login Pages — Showcase</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+
+        body {
+            background: #030712;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(124,58,237,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(37,99,235,0.08) 0%, transparent 50%);
+        }
+
+        /* ===== Tab Active State ===== */
+        .tab-btn.active {
+            background: rgba(124,58,237,0.15);
+            border-color: rgba(124,58,237,0.4);
+            color: #c4b5fd;
+        }
+
+        /* ===== Iframe Container ===== */
+        .preview-wrapper {
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.07);
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.03),
+                0 30px 100px -20px rgba(0,0,0,0.7),
+                0 0 60px rgba(124,58,237,0.05);
+        }
+
+        .browser-bar {
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .anim { opacity: 0; animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .anim-d1 { animation-delay: 0.05s; }
+        .anim-d2 { animation-delay: 0.12s; }
+        .anim-d3 { animation-delay: 0.20s; }
+        .anim-d4 { animation-delay: 0.28s; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col p-4 sm:p-6 lg:p-10">
+
+    <!-- ===== Header ===== -->
+    <header class="text-center mb-8 anim anim-d1">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 mb-5">
+            <span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></span>
+            <span class="text-violet-300 text-[11px] font-semibold tracking-widest uppercase">Showcase</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-3">
+            Premium Login Pages
+        </h1>
+        <p class="text-gray-500 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
+            Two stunning, production-ready login designs — one built with
+            <span class="text-cyan-400 font-medium">Tailwind CSS</span> and one with
+            <span class="text-indigo-400 font-medium">Bootstrap 5</span>.
+        </p>
+    </header>
+
+    <!-- ===== Tab Buttons ===== -->
+    <nav class="flex justify-center gap-3 mb-2 anim anim-d2" aria-label="Design switcher">
+        <button
+            onclick="switchTab('tailwind')"
+            id="tab-tailwind"
+            class="tab-btn active flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium border border-white/10 bg-white/[0.02] text-gray-400 hover:text-white transition-all duration-300 cursor-pointer"
+        >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z"/></svg>
+            Tailwind CSS
+        </button>
+        <button
+            onclick="switchTab('bootstrap')"
+            id="tab-bootstrap"
+            class="tab-btn flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium border border-white/10 bg-white/[0.02] text-gray-400 hover:text-white transition-all duration-300 cursor-pointer"
+        >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M11.77 11.24H9.956V8.202h2.152c1.17 0 1.834.522 1.834 1.466 0 1.008-.773 1.572-2.174 1.572zm.324 1.206H9.957v3.348h2.231c1.459 0 2.232-.585 2.232-1.685s-.795-1.663-2.326-1.663zM24 11.39v1.218C24 18.075 18.075 24 12.61 24H11.39C5.925 24 0 18.075 0 12.61V11.39C0 5.925 5.925 0 11.39 0h1.22C18.075 0 24 5.925 24 11.39zM13.925 8.465c0-1.266-.94-2.113-2.474-2.113H8.273v7.297h2.917c1.834 0 2.92-.85 2.92-2.266 0-1.074-.63-1.83-1.655-1.974v-.053c.752-.193 1.47-.855 1.47-1.891z"/></svg>
+            Bootstrap 5
+        </button>
+    </nav>
+
+    <!-- ===== Description ===== -->
+    <p id="desc-text" class="text-center text-gray-600 text-xs mb-5 anim anim-d2 transition-all duration-300">
+        Dark glassmorphism · Animated gradient blobs · Floating labels · Premium dark UI
+    </p>
+
+    <!-- ===== Browser Preview Frame ===== -->
+    <div class="flex-1 flex flex-col max-w-6xl w-full mx-auto anim anim-d3">
+        <div class="preview-wrapper flex-1 flex flex-col">
+            <!-- Fake Browser Bar -->
+            <div class="browser-bar flex items-center gap-3 px-5 py-3">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
+                    <span class="w-3 h-3 rounded-full bg-[#febc2e]"></span>
+                    <span class="w-3 h-3 rounded-full bg-[#28c840]"></span>
+                </div>
+                <div class="flex-1 flex justify-center">
+                    <div class="bg-white/[0.04] border border-white/[0.06] rounded-lg px-4 py-1 text-[11px] text-gray-500 font-mono max-w-xs w-full text-center" id="url-bar">
+                        tailwind-login.html
+                    </div>
+                </div>
+                <a id="open-link" href="tailwind-login.html" target="_blank" class="text-gray-600 hover:text-violet-400 transition-colors" title="Open in new tab">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+                    </svg>
+                </a>
+            </div>
+            <!-- Iframe -->
+            <iframe
+                id="preview-frame"
+                src="tailwind-login.html"
+                class="w-full flex-1 border-0 bg-[#0a0a1a]"
+                style="min-height: 640px;"
+                title="Login page preview"
+            ></iframe>
+        </div>
+    </div>
+
+    <!-- ===== Footer ===== -->
+    <footer class="text-center mt-6 anim anim-d4">
+        <p class="text-gray-700 text-xs">
+            Crafted with precision · Fully responsive · Production-ready
+        </p>
+    </footer>
+
+    <!-- ===== JavaScript ===== -->
+    <script>
+        const meta = {
+            tailwind: {
+                file: 'tailwind-login.html',
+                desc: 'Dark glassmorphism · Animated gradient blobs · Floating labels · Premium dark UI',
+                bg: '#0a0a1a'
+            },
+            bootstrap: {
+                file: 'bootstrap-login.html',
+                desc: 'Split-screen layout · Brand panel with features & testimonial · Light neumorphism',
+                bg: '#fafafa'
+            }
+        };
+
+        function switchTab(tab) {
+            // Update active tab
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+
+            // Update iframe
+            const frame = document.getElementById('preview-frame');
+            frame.style.background = meta[tab].bg;
+            frame.src = meta[tab].file;
+
+            // Update description
+            document.getElementById('desc-text').textContent = meta[tab].desc;
+
+            // Update URL bar
+            document.getElementById('url-bar').textContent = meta[tab].file;
+
+            // Update open link
+            document.getElementById('open-link').href = meta[tab].file;
+        }
+    </script>
+</body>
+</html>
